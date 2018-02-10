@@ -14,11 +14,14 @@
 #include "sea_dsa/Cloner.hh"
 #include "sea_dsa/Mapper.hh"
 #include "sea_dsa/CallSite.hh"
-#include "sea_dsa/support/Debug.h"
+
+// #include "sea_dsa/support/Debug.h"
 
 #include "boost/range/algorithm/set_algorithm.hpp"
 #include "boost/range/iterator_range.hpp"
 #include "boost/unordered_set.hpp"
+
+#define LOG(message, ...) __VA_ARGS__
 
 using namespace llvm;
 
@@ -169,7 +172,12 @@ void sea_dsa::Node::joinTypes (unsigned offset, const Node &n)
 void sea_dsa::Node::collapse (int tag)
 {
   if (isCollapsed ()) return;
-        
+
+  errs() << "COLLAPSE " << tag << "\n";
+  dump();
+  errs() << "\n\n";
+  viewGraph();
+
   LOG ("unique_scalar",
        if (m_unique_scalar)
          errs () << "KILL due to collapse: "

@@ -357,6 +357,24 @@ void IntraBlockBuilder::visitStoreInst(StoreInst &SI) {
     if (BlockBuilderBase::isNullConstant(*SI.getValueOperand())) {
       // TODO: mark link as possibly pointing to null
     } else {
+      static int I = 0;
+      outs() << "Visit SI " << I << "\n";
+      outs().flush();
+
+      Instruction *Val = dyn_cast<Instruction>(SI.getValueOperand());
+      Instruction *Destination = dyn_cast<Instruction>(SI.getPointerOperand());
+
+      if (I++ == 27) {
+        SI.print(outs());
+        outs() << "\n\tstored value:";
+        if (Val) Val->print(outs());
+        outs() << "\n\tdestination:";
+        if (Destination) Destination->stripPointerCasts()->print(outs());
+        (outs() << "\n").flush();
+
+        base.getNode()->viewGraph();
+      }
+
       assert(!val.isNull());
       base.addLink(0, val);
     }

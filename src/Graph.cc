@@ -191,7 +191,6 @@ void sea_dsa::Node::collapse (int tag)
   {
     m_size = 1;
     setCollapsed (true);
-    return;
   }
   else
   {
@@ -208,6 +207,8 @@ void sea_dsa::Node::collapse (int tag)
     n.m_size = 1;
     pointTo (n, Offset(n, 0));
   }
+
+  viewGraph();
 }
 
 void sea_dsa::Node::pointTo (Node &node, const Offset &offset)
@@ -276,6 +277,9 @@ void sea_dsa::Node::pointTo (Node &node, const Offset &offset)
 void sea_dsa::Node::addLink (unsigned o, Cell &c)
 {
   Offset offset (*this, o);
+  if (o == 8 && c.getOffset() == 12)
+    __asm__("int3");
+
   if (!hasLink (offset))
     setLink (offset, c);
   else
@@ -538,9 +542,11 @@ void sea_dsa::Node::writeTypes(raw_ostream&o) const {
 }
 
 void sea_dsa::Node::write(raw_ostream&o) const {
-  if (isForwarding ())
+  if (isForwarding ()) {
+    o << "FORWARDING:\t";
     m_forward.write (o);
-  else
+    o << "\n<>\t";
+  }
   {
     /// XXX: we print here the address. Therefore, it will change from
     /// one run to another.

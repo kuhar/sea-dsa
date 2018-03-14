@@ -196,7 +196,7 @@ void sea_dsa::Node::collapse (int tag)
   {
     LOG ("dsa-collapse",
          errs () << "Collapsing tag: " << tag << "\n";
-         write (errs ());
+         //write (errs ());
          errs () << "\n";);
     
     // create a new node to be the collapsed version of the current one
@@ -278,7 +278,7 @@ void sea_dsa::Node::addLink (unsigned o, Cell &c)
 {
   Offset offset (*this, o);
   if (o == 8 && c.getOffset() == 12)
-    __asm__("int3");
+    ; //__asm__("int3");
 
   if (!hasLink (offset))
     setLink (offset, c);
